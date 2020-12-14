@@ -19,8 +19,13 @@ public class AlfrescoService {
 
     public AlfrescoDTO getResponse(String requestBodyString) {
 
-        List<String> result = AlfrescoHelper.rangeTransformer(alfrescoMapper.stringToList(requestBodyString));
+        List<String> listProcessed = AlfrescoHelper.rangeTransformer(alfrescoMapper.stringToList(requestBodyString));
 
-        return new AlfrescoDTO(result);
+        AlfrescoDTO alfrescoDTO = new AlfrescoDTO(listProcessed);
+        alfrescoDTO.setFizzOccurrence(AlfrescoHelper.countOccurrence(listProcessed, "fizz"));
+        alfrescoDTO.setBuzzOccurrence(AlfrescoHelper.countOccurrence(listProcessed, "buzz"));
+        alfrescoDTO.setAlfrescoOccurrence(AlfrescoHelper.countOccurrence(listProcessed, "alfresco"));
+
+        return alfrescoDTO;
     }
 }

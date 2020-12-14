@@ -34,4 +34,12 @@ public class AlfrescoHelper {
         }
         return output;
     }
+
+    public static long countOccurrence(List<String> list, String textToCount) {
+        long result = list.stream()
+                .filter(item -> item.equals(textToCount.trim()))
+                .count();
+
+        return result;
+    }
 }
