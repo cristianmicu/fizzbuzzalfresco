@@ -1,45 +1,59 @@
 package com.example.alfresco.helper;
 
-import java.util.ArrayList;
+import com.example.alfresco.model.SpecialWords;
+
+import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class AlfrescoHelper {
 
     private final static String SEPARATOR = " ";
-    private final static String FIZZ = "fizz";
-    private final static String BUZZ = "buzz";
-    private final static String ALFRESCO = "alfresco";
 
-    Logger logger = Logger.getLogger(AlfrescoHelper.class.toString());
-
-    public static List<String> rangeTransformer(List<Integer> input) {
-        List<String> output = new ArrayList<>();
-        for (Integer item : input) {
-            StringBuilder itemResult = new StringBuilder(SEPARATOR);
-            if (item.toString().contains("3")) {
-                itemResult.append(ALFRESCO);
-            } else {
-                if (item % 3 == 0) {
-                    itemResult.append(FIZZ);
-                }
-                if (item % 5 == 0) {
-                    itemResult.append(BUZZ);
-                }
-                if (itemResult.length() < 2) {
-                    itemResult.append(item);
-                }
-            }
-            output.add(itemResult.toString());
-        }
-        return output;
+    private AlfrescoHelper() {
     }
 
-    public static long countOccurrence(List<String> list, String textToCount) {
-        long result = list.stream()
-                .filter(item -> item.equals(textToCount.trim()))
-                .count();
+    public static String rangeTransformer(String input) {
+        StringBuilder result = new StringBuilder();
+        for (Integer item : stringToIntegerList(input)) {
+            boolean isNumber = true;
+            if (item.toString().contains("3")) {
+                result.append(SEPARATOR).append(SpecialWords.ALFRESCO.getValue());
+            } else {
+                if (item % 3 == 0) {
+                    result.append(SEPARATOR).append(SpecialWords.FIZZ.getValue());
+                    isNumber = false;
+                }
+                if (item % 5 == 0) {
+                    if (isNumber) {
+                        result.append(SEPARATOR);
+                    }
+                    result.append(SpecialWords.BUZZ.getValue());
+                    isNumber = false;
+                }
+                if (isNumber) {
+                    result.append(SEPARATOR).append(item);
+                }
+            }
+        }
+        return result.toString().trim();
+    }
 
-        return result;
+    public static List<Integer> stringToIntegerList(String inputString) {
+        return Arrays.stream(inputString.split(","))
+                .map(item -> Integer.parseInt(item.trim().toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public static String createCompleteReport(String textTransformed) {
+        StringBuilder completeReportSB = new StringBuilder();
+        for (SpecialWords item : SpecialWords.values()) {
+            completeReportSB.append(" ")
+                    .append(item.getValue())
+                    .append(": ")
+                    .append(item.getOccurrance(textTransformed));
+        }
+
+        return completeReportSB.toString().trim();
     }
 }
