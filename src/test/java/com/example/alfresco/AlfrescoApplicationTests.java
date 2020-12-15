@@ -55,7 +55,7 @@ class AlfrescoApplicationTests {
         mvc.perform(get("/api/fizzbuzz").content(INPUT)
                 .contentType(MediaType.TEXT_PLAIN))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.TEXT_PLAIN)).equals(expectedString);
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON)).equals(expectedString);
     }
 
 }
